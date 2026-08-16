@@ -52,11 +52,11 @@ THEMES = {
 }
 
 ROWS = [
-    ("Now", "Full-stack Developer"),
-    ("Prev", "Eduvos student (IT/Robotics)"),
+    ("Now", "Full-stack Developer / AI Engineer"),
+    ("Prev", "Financial institution, telecom & fintech clients"),
     ("Stack", "Full stack (JS/TS + Java)"),
     ("Learning", "Robotics & Intelligent Systems (Eduvos)"),
-    ("Highlights", "Enterprise clients: FNB, WesBank, Vodacom, KPN"),
+    ("Highlights", "BSc Computer Science"),
 ]
 
 STAGGER = 0.15   # seconds between each row's animation start
