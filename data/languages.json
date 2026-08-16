@@ -1,0 +1,80 @@
+{
+  "repo_count": 35,
+  "languages": [
+    {
+      "language": "Python",
+      "bytes": 14438868,
+      "percent": 81.4
+    },
+    {
+      "language": "JavaScript",
+      "bytes": 1936861,
+      "percent": 10.9
+    },
+    {
+      "language": "CSS",
+      "bytes": 446514,
+      "percent": 2.5
+    },
+    {
+      "language": "TypeScript",
+      "bytes": 436040,
+      "percent": 2.5
+    },
+    {
+      "language": "HTML",
+      "bytes": 240411,
+      "percent": 1.4
+    },
+    {
+      "language": "Java",
+      "bytes": 81502,
+      "percent": 0.5
+    },
+    {
+      "language": "Shell",
+      "bytes": 75426,
+      "percent": 0.4
+    },
+    {
+      "language": "Clojure",
+      "bytes": 67219,
+      "percent": 0.4
+    },
+    {
+      "language": "PowerShell",
+      "bytes": 9033,
+      "percent": 0.1
+    },
+    {
+      "language": "PLpgSQL",
+      "bytes": 4299,
+      "percent": 0.0
+    },
+    {
+      "language": "SCSS",
+      "bytes": 2968,
+      "percent": 0.0
+    },
+    {
+      "language": "Makefile",
+      "bytes": 1308,
+      "percent": 0.0
+    },
+    {
+      "language": "Handlebars",
+      "bytes": 988,
+      "percent": 0.0
+    },
+    {
+      "language": "Mako",
+      "bytes": 494,
+      "percent": 0.0
+    },
+    {
+      "language": "Dockerfile",
+      "bytes": 156,
+      "percent": 0.0
+    }
+  ]
+}

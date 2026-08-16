@@ -31,6 +31,14 @@
 
 <br><br>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./language-bar.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./language-bar-light.svg" />
+  <img src="./language-bar.svg" width="860" />
+</picture>
+
+<br><br>
+
 <h3><code>mlandukid@github ~ $ ./snake.sh</code></h3>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./dist/github-contribution-grid-snake-dark.svg" />

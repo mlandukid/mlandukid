@@ -8,8 +8,11 @@ name: Update profile art
     branches: [main]
     paths-ignore:
       - "data/contributions.json"
+      - "data/languages.json"
       - "contrib-heatmap.svg"
       - "contrib-heatmap-light.svg"
+      - "language-bar.svg"
+      - "language-bar-light.svg"
       - "dist/**"
 
 concurrency:
@@ -30,10 +33,12 @@ jobs:
       - run: pip install -r scripts/requirements.txt
       - run: python scripts/fetch_contributions.py
       - run: python scripts/render_heatmap_svg.py
+      - run: python scripts/fetch_languages.py
+      - run: python scripts/render_language_bar.py
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: refresh contribution graph [skip ci]"
-          file_pattern: "data/contributions.json contrib-heatmap.svg contrib-heatmap-light.svg"
+          file_pattern: "data/contributions.json data/languages.json contrib-heatmap.svg contrib-heatmap-light.svg language-bar.svg language-bar-light.svg"
 
   snake:
     runs-on: ubuntu-latest
