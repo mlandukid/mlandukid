@@ -22,7 +22,6 @@ Output:
 import os
 from pathlib import Path
 
-OUTPUT_PATH = "info-card.svg"
 STATIC = os.environ.get("STATIC") == "1"
 
 WIDTH = 490
@@ -31,12 +30,26 @@ ROW_H = 30
 PADDING_X = 20
 FONT_FAMILY = '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace'
 
-BG_COLOR = "#0d1117"
-TITLE_BAR_COLOR = "#161b22"
-BORDER_COLOR = "#30363d"
-KEY_COLOR = "#39d353"
-VALUE_COLOR = "#c9d1d9"
-TITLE_TEXT_COLOR = "#8b949e"
+THEMES = {
+    "dark": {
+        "output": "info-card.svg",
+        "bg": "#0d1117",
+        "title_bar": "#161b22",
+        "border": "#30363d",
+        "key": "#39d353",
+        "value": "#c9d1d9",
+        "title_text": "#8b949e",
+    },
+    "light": {
+        "output": "info-card-light.svg",
+        "bg": "#ffffff",
+        "title_bar": "#f6f8fa",
+        "border": "#d0d7de",
+        "key": "#1a7f37",
+        "value": "#24292f",
+        "title_text": "#57606a",
+    },
+}
 
 ROWS = [
     ("Now", "Full-stack Developer"),
@@ -58,7 +71,7 @@ def escape_xml(text: str) -> str:
     )
 
 
-def build_svg() -> str:
+def build_svg(theme: dict) -> str:
     height = TITLE_BAR_H + ROW_H * len(ROWS) + 20
 
     parts = []
@@ -69,27 +82,27 @@ def build_svg() -> str:
     parts.append(
         f'<style>'
         f'text {{ font-family: {FONT_FAMILY}; }}'
-        f'.key {{ font-size: 13px; fill: {KEY_COLOR}; font-weight: 600; }}'
-        f'.value {{ font-size: 13px; fill: {VALUE_COLOR}; }}'
-        f'.title {{ font-size: 12px; fill: {TITLE_TEXT_COLOR}; }}'
+        f'.key {{ font-size: 13px; fill: {theme["key"]}; font-weight: 600; }}'
+        f'.value {{ font-size: 13px; fill: {theme["value"]}; }}'
+        f'.title {{ font-size: 12px; fill: {theme["title_text"]}; }}'
         f'</style>'
     )
 
     # outer card with rounded border
     parts.append(
         f'<rect x="0.5" y="0.5" width="{WIDTH - 1}" height="{height - 1}" '
-        f'rx="8" fill="{BG_COLOR}" stroke="{BORDER_COLOR}" stroke-width="1" />'
+        f'rx="8" fill="{theme["bg"]}" stroke="{theme["border"]}" stroke-width="1" />'
     )
 
     # title bar
     parts.append(
         f'<path d="M0.5,8 a8,8 0 0 1 8,-7.5 L{WIDTH - 8.5},0.5 '
         f'a8,8 0 0 1 8,8 L{WIDTH - 0.5},{TITLE_BAR_H} L0.5,{TITLE_BAR_H} Z" '
-        f'fill="{TITLE_BAR_COLOR}" />'
+        f'fill="{theme["title_bar"]}" />'
     )
     parts.append(
         f'<line x1="0.5" y1="{TITLE_BAR_H}" x2="{WIDTH - 0.5}" y2="{TITLE_BAR_H}" '
-        f'stroke="{BORDER_COLOR}" stroke-width="1" />'
+        f'stroke="{theme["border"]}" stroke-width="1" />'
     )
     # traffic-light dots
     for i, color in enumerate(["#ff5f56", "#ffbd2e", "#27c93f"]):
@@ -136,10 +149,11 @@ def build_svg() -> str:
 
 
 def main() -> None:
-    svg = build_svg()
-    Path(OUTPUT_PATH).write_text(svg, encoding="utf-8")
     mode = "static frame" if STATIC else "animated"
-    print(f"Done. Wrote {OUTPUT_PATH} ({mode})")
+    for name, theme in THEMES.items():
+        svg = build_svg(theme)
+        Path(theme["output"]).write_text(svg, encoding="utf-8")
+        print(f"Done. Wrote {theme['output']} ({mode})")
 
 
 if __name__ == "__main__":

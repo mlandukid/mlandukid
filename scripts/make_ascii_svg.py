@@ -28,7 +28,6 @@ from pathlib import Path
 from PIL import Image
 
 INPUT_PATH = "source-prepped.png"
-OUTPUT_PATH = "ascii-portrait.svg"
 
 GRID_COLS = 100
 GRID_ROWS = 53
@@ -39,7 +38,19 @@ RAMP = " .`:-=+*cs#%@"
 CHAR_W = 6.0
 CHAR_H = 11.0
 FONT_SIZE = 11
-FILL_COLOR = "#c9d1d9"
+
+THEMES = {
+    "dark": {
+        "output": "ascii-portrait.svg",
+        "bg": "#0d1117",
+        "fill": "#c9d1d9",
+    },
+    "light": {
+        "output": "ascii-portrait-light.svg",
+        "bg": "#ffffff",
+        "fill": "#24292f",
+    },
+}
 
 ROW_STAGGER = 0.035   # seconds between each row starting its wipe
 WIPE_DURATION = 0.5   # seconds for a single row to fully reveal
@@ -74,9 +85,10 @@ def escape_xml(text: str) -> str:
     )
 
 
-def build_svg(rows: list[str]) -> str:
+def build_svg(rows: list[str], theme: dict) -> str:
     width = GRID_COLS * CHAR_W
     height = GRID_ROWS * CHAR_H
+    fill_color = theme["fill"]
 
     parts = []
     parts.append(
@@ -85,12 +97,12 @@ def build_svg(rows: list[str]) -> str:
         f'width="{width:.0f}" height="{height:.0f}">'
     )
     parts.append(
-        f'<rect width="100%" height="100%" fill="#0d1117" />'
+        f'<rect width="100%" height="100%" fill="{theme["bg"]}" />'
     )
     parts.append(
         f'<style>text {{ font-family: "SFMono-Regular", Consolas, '
         f'"Liberation Mono", Menlo, monospace; font-size: {FONT_SIZE}px; '
-        f'fill: {FILL_COLOR}; white-space: pre; }}</style>'
+        f'fill: {fill_color}; white-space: pre; }}</style>'
     )
 
     for row_idx, row_text in enumerate(rows):
@@ -120,7 +132,7 @@ def build_svg(rows: list[str]) -> str:
         cursor_id = f"cursor{row_idx}"
         parts.append(
             f'<rect x="0" y="{y - CHAR_H:.1f}" width="{CHAR_W:.1f}" height="{CHAR_H:.1f}" '
-            f'fill="{FILL_COLOR}" opacity="0.85">'
+            f'fill="{fill_color}" opacity="0.85">'
         )
         parts.append(
             f'  <animate attributeName="x" from="0" to="{row_width:.1f}" '
@@ -147,11 +159,11 @@ def main() -> None:
     print(f"Reading {INPUT_PATH}...")
     rows = build_ascii_grid(INPUT_PATH)
 
-    print(f"Building {GRID_COLS}x{GRID_ROWS} SVG with staggered wipe animation...")
-    svg = build_svg(rows)
-
-    Path(OUTPUT_PATH).write_text(svg, encoding="utf-8")
-    print(f"Done. Wrote {OUTPUT_PATH}")
+    for name, theme in THEMES.items():
+        print(f"Building {name} {GRID_COLS}x{GRID_ROWS} SVG with staggered wipe animation...")
+        svg = build_svg(rows, theme)
+        Path(theme["output"]).write_text(svg, encoding="utf-8")
+        print(f"Done. Wrote {theme['output']}")
 
 
 if __name__ == "__main__":

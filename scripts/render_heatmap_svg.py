@@ -23,10 +23,22 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 INPUT_PATH = "data/contributions.json"
-OUTPUT_PATH = "contrib-heatmap.svg"
 
-# none -> brightest (level 5 is a neon top end)
-PALETTE = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353", "#69f0a0"]
+THEMES = {
+    "dark": {
+        "output": "contrib-heatmap.svg",
+        "bg": "#0d1117",
+        "text": "#8b949e",
+        # none -> brightest (level 5 is a neon top end)
+        "palette": ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353", "#69f0a0"],
+    },
+    "light": {
+        "output": "contrib-heatmap-light.svg",
+        "bg": "#ffffff",
+        "text": "#57606a",
+        "palette": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39", "#0d4429"],
+    },
+}
 
 CELL = 11
 GAP = 3
@@ -51,9 +63,9 @@ def load_data() -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def level_to_color(level: int) -> str:
-    idx = max(0, min(len(PALETTE) - 1, level))
-    return PALETTE[idx]
+def level_to_color(level: int, palette: list[str]) -> str:
+    idx = max(0, min(len(palette) - 1, level))
+    return palette[idx]
 
 
 def build_week_grid(days):
@@ -84,9 +96,10 @@ def build_week_grid(days):
     return weeks
 
 
-def build_svg(data: dict) -> str:
+def build_svg(data: dict, theme: dict) -> str:
     days = data.get("days", [])
     stats = data.get("stats", {})
+    palette = theme["palette"]
 
     weeks = build_week_grid(days)
     grid_width = LEFT_MARGIN + WEEKS * (CELL + GAP)
@@ -100,14 +113,14 @@ def build_svg(data: dict) -> str:
     )
     parts.append(
         '<style>'
-        'text { font-family: "SFMono-Regular", Consolas, "Liberation Mono", '
-        'Menlo, monospace; fill: #8b949e; }'
+        f'text {{ font-family: "SFMono-Regular", Consolas, "Liberation Mono", '
+        f'Menlo, monospace; fill: {theme["text"]}; }}'
         '.cell { animation: reveal 0.4s ease-out both; }'
         '@keyframes reveal { from { opacity: 0; transform: scale(0.4); } '
         'to { opacity: 1; transform: scale(1); } }'
         '</style>'
     )
-    parts.append('<rect width="100%" height="100%" fill="#0d1117" />')
+    parts.append(f'<rect width="100%" height="100%" fill="{theme["bg"]}" />')
 
     # month labels along the top
     seen_months = set()
@@ -138,7 +151,7 @@ def build_svg(data: dict) -> str:
             x = LEFT_MARGIN + week_idx * (CELL + GAP)
             y = TOP_MARGIN + day_idx * (CELL + GAP)
             level = day["level"] if day else 0
-            color = level_to_color(level)
+            color = level_to_color(level, palette)
             delay = (week_idx + day_idx) * 0.006
             title = ""
             if day:
@@ -157,7 +170,7 @@ def build_svg(data: dict) -> str:
     legend_x = LEFT_MARGIN
     parts.append(f'<text x="{legend_x}" y="{legend_y + 8}" font-size="10">Less</text>')
     lx = legend_x + 32
-    for color in PALETTE:
+    for color in palette:
         parts.append(
             f'<rect x="{lx}" y="{legend_y}" width="{CELL}" height="{CELL}" '
             f'rx="2" fill="{color}" />'
@@ -183,11 +196,11 @@ def main() -> None:
     print(f"Reading {INPUT_PATH}...")
     data = load_data()
 
-    print("Rendering heatmap SVG...")
-    svg = build_svg(data)
-
-    Path(OUTPUT_PATH).write_text(svg, encoding="utf-8")
-    print(f"Done. Wrote {OUTPUT_PATH}")
+    for name, theme in THEMES.items():
+        print(f"Rendering {name} heatmap SVG...")
+        svg = build_svg(data, theme)
+        Path(theme["output"]).write_text(svg, encoding="utf-8")
+        print(f"Done. Wrote {theme['output']}")
 
 
 if __name__ == "__main__":
