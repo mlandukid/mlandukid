@@ -39,6 +39,15 @@
 
 <br><br>
 
+<h3><code>mlandukid@github ~ $ ls projects/</code></h3>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./project-cards.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./project-cards-light.svg" />
+  <img src="./project-cards.svg" width="860" />
+</picture>
+
+<br><br>
+
 <h3><code>mlandukid@github ~ $ ./snake.sh</code></h3>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./dist/github-contribution-grid-snake-dark.svg" />

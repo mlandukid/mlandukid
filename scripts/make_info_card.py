@@ -55,6 +55,7 @@ ROWS = [
     ("Now", "Full-stack Developer"),
     ("Prev", "Eduvos student (IT/Robotics)"),
     ("Stack", "Full stack (JS/TS + Java)"),
+    ("Learning", "Robotics & Intelligent Systems (Eduvos)"),
     ("Highlights", "Enterprise clients: FNB, WesBank, Vodacom, KPN"),
 ]
 
